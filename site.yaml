@@ -1,0 +1,30 @@
+- hosts: all
+  become: true
+  vars:
+    sftp_user: tesk
+  handlers:
+    - name: Restart sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+  tasks:
+    - name: Replace sftp Subsystem
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^Subsystem.*sftp.*'
+        line: Subsystem     sftp    internal-sftp
+      notify:
+        - Restart sshd
+    - name: Add SFT configuration to /etc/ssh/sshd_config
+      blockinfile:
+        path: /etc/ssh/sshd_config
+        append_newline: true
+        prepend_newline: true
+        block: |
+          Match User {{ sftp_user }}
+            X11Forwarding no
+            AllowTcpForwarding no
+            PermitTTY no
+            ForceCommand internal-sftp
+      notify:
+        - Restart sshd
