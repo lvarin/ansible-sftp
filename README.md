@@ -21,8 +21,12 @@ This is still a prototype. It makes some assumptions, like that the user exists.
     ```sh
     ansible-playbook site.yaml -v -i inventory
     ```
+    
+## Remote mount
 
-1. Done
+It is possible to mount a remote folder using `SSHFS`. There is only 
+
+1. Make sure you have access to the remote machine using ssh:
 
     ```sh
     $ ssh tesk@YYY.YYY.YYY.YYY
@@ -31,3 +35,17 @@ This is still a prototype. It makes some assumptions, like that the user exists.
     Connection to YYY.YYY.YYY.YYY closed.
     ```
 
+1. Install sshf:
+
+   ```sh
+   $ sudo dnf install fuse-sshfs
+   ```
+
+1. Mount the folder:
+
+   ```sh
+   $ mkdir mount
+   $ sshfs tesk@YYY.YYY.YYY.YYY: ~/mount/
+   $ ls -l mount
+   total 0
+   ```
